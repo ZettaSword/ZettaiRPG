@@ -68,6 +68,7 @@ public class StatsGui extends GuiScreen {
         fontRenderer.drawString("Intelligence: +" + df.format(calcProgress(stats.getOrDefault(Stats.INT, 0),ModConfig.costIntelligence)) + "%", width / 2 - 100, height / 2 - 40, 0xFFFFFF);
         fontRenderer.drawString("Skills:", width / 2 - 100, height / 2, 0xFFFFFF);
         fontRenderer.drawString("Mining: +" + df.format(calcProgress(stats.getOrDefault(Stats.MINING_SPEED, 0),ModConfig.costMiningSpeed)), width / 2 - 100, height / 2 + 20, 0xFFFFFF);
+        fontRenderer.drawString("Archery: +" + df.format(calcProgress(stats.getOrDefault(Stats.ARCHERY, 0),ModConfig.costArchery)) + "%", width / 2 - 100, height / 2 + 40, 0xFFFFFF);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

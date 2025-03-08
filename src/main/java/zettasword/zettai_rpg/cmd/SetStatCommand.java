@@ -24,7 +24,7 @@ public class SetStatCommand extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender iCommandSender) {
-        return "/setStat [PlayerName] [vit/str/agi/int/mining] [points]";
+        return "/setStat [PlayerName] [vit/str/agi/int/mining/archery] [points]";
     }
 
     @Override
@@ -42,6 +42,7 @@ public class SetStatCommand extends CommandBase {
                 case "agi": data.setVariable(Stats.AGI, parseInt(args[2])); data.sync(); break;
                 case "int": data.setVariable(Stats.INT, parseInt(args[2])); data.sync(); break;
                 case "mining": data.setVariable(Stats.MINING_SPEED, parseInt(args[2])); data.sync(); break;
+                case "archery": data.setVariable(Stats.ARCHERY, parseInt(args[2])); data.sync(); break;
             }
         }catch (Exception ignore){
             throw new WrongUsageException(this.getUsage(commandSender));
@@ -54,9 +55,9 @@ public class SetStatCommand extends CommandBase {
         if (args.length == 1){
             tabs.addAll(Arrays.asList(server.getPlayerList().getOnlinePlayerNames()));
         } else if (args.length == 2) {
-            tabs.addAll(Arrays.asList("vit", "str", "agi", "int", "mining"));
+            tabs.addAll(Arrays.asList("vit", "str", "agi", "int", "mining", "archery"));
         } else if (args.length == 3) {
-            tabs.add("0");
+            tabs.add("100");
         }
         return tabs;
     }

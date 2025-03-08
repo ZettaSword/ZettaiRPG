@@ -24,7 +24,7 @@ public class AddStatCommand extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender iCommandSender) {
-        return "/addStat [PlayerName] [vit/str/agi/int/mining] [points]";
+        return "/addStat [PlayerName] [vit/str/agi/int/mining/archery] [points]";
     }
 
     @Override
@@ -43,6 +43,8 @@ public class AddStatCommand extends CommandBase {
                 case "int": data.setVariable(Stats.INT, data.getOrDefault(Stats.INT, 0) + parseInt(args[2])); data.sync(); break;
                 case "mining": data.setVariable(Stats.MINING_SPEED, data.getOrDefault(Stats.MINING_SPEED, 0)
                         + parseInt(args[2])); data.sync(); break;
+                case "archery": data.setVariable(Stats.ARCHERY, data.getOrDefault(Stats.ARCHERY, 0)
+                        + parseInt(args[2])); data.sync(); break;
             }
         }catch (Exception ignore){
             throw new WrongUsageException(this.getUsage(commandSender));
@@ -55,7 +57,7 @@ public class AddStatCommand extends CommandBase {
         if (args.length == 1){
             tabs.addAll(Arrays.asList(server.getPlayerList().getOnlinePlayerNames()));
         } else if (args.length == 2) {
-            tabs.addAll(Arrays.asList("vit", "str", "agi", "int", "mining"));
+            tabs.addAll(Arrays.asList("vit", "str", "agi", "int", "mining", "archery"));
         } else if (args.length == 3) {
             tabs.add("0");
         }

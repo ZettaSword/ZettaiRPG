@@ -79,17 +79,20 @@ public class EventsHandler {
                         player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 5, (int) (((float) agi /ModConfig.costAgility) * ModConfig.agiAmplifier), false,false));
                     }
                 }
-                if (player.ticksExisted % 100 == 0 && ModConfig.statStrength){
-                    IAttributeInstance attack = map.getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
-                    int str = data.getOrDefault(Stats.STR, 0);
-                    checkStatSafely(str, attack, ModConfig.costStrength,ModConfig.strAmplifier,"strength", ADD);
+                if (player.ticksExisted % 100 == 0) {
+                    if (ModConfig.statStrength) {
+                        IAttributeInstance attack = map.getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
+                        int str = data.getOrDefault(Stats.STR, 0);
+                        checkStatSafely(str, attack, ModConfig.costStrength, ModConfig.strAmplifier, "strength", ADD);
+                    }
+
+                    if (ModConfig.statVitality) {
+                        int hp = data.getOrDefault(Stats.VIT, 0);
+                        IAttributeInstance health = map.getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH);
+                        checkStatSafely(hp, health, ModConfig.costVitality, 1, "health", ADD);
+                    }
                 }
 
-                if (player.ticksExisted % 100 == 0 && ModConfig.statVitality){
-                    int hp = data.getOrDefault(Stats.VIT, 0);
-                    IAttributeInstance health = map.getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH);
-                    checkStatSafely(hp, health, ModConfig.costVitality, 1, "health", ADD);
-                }
             }
         }
     }
@@ -100,7 +103,7 @@ public class EventsHandler {
             EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
             RPGData data = RPGData.get(player);
             if (data != null) {
-                if (!event.getSource().isMagicDamage() && ModConfig.statStrength){
+                if (!event.getSource().isProjectile() && !event.getSource().isMagicDamage() && ModConfig.statStrength){
                     if (!player.world.isRemote) {
                         int str = data.getOrDefault(Stats.STR, 0);
                         data.setVariable(Stats.STR, str + 1);
@@ -114,6 +117,15 @@ public class EventsHandler {
                         data.sync();
                     }
                     event.setAmount(event.getAmount() * (1.0F + (float) data.getOrDefault(Stats.INT, 0) / ModConfig.costIntelligence));
+                }
+
+                if (event.getSource().isProjectile() && !event.getSource().isMagicDamage() && ModConfig.statArchery){
+                    if (!player.world.isRemote) {
+                        int intelligence = data.getOrDefault(Stats.ARCHERY, 0);
+                        data.setVariable(Stats.ARCHERY, intelligence + 1);
+                        data.sync();
+                    }
+                    event.setAmount(event.getAmount() * (1.0F + (float) data.getOrDefault(Stats.ARCHERY, 0) / ModConfig.costArchery));
                 }
             }
         }
@@ -148,7 +160,7 @@ public class EventsHandler {
     public static void onMine(BlockEvent.BreakEvent event){
         EntityPlayer player = event.getPlayer();
         RPGData data = RPGData.get(player);
-        if (data != null){
+        if (data != null && event.getState().getBlockHardness(player.world, event.getPos()) >= 1.0){
             int mineSpd = data.getOrDefault(Stats.MINING_SPEED, 0);
             data.setVariable(Stats.MINING_SPEED, mineSpd + 1);
             data.sync();
